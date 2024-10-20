@@ -93,7 +93,7 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
      * @return the number of key-value mappings in this map
      */
     public int size() {
-        // TODO
+        return size;
     }
 
     /**
@@ -102,6 +102,7 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
      */
     public boolean isEmpty() {
         // TODO
+        return root == null ? false : true;
     }
 
     /**
@@ -210,7 +211,18 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
      * @return a reference to the Node containing the specified key
      */
     private Node<K, V> iterativeSearch(K key) {
-        // TODO
+        Node<K, V> curr = root;
+        while (curr != null) {
+            if (curr.key.compareTo(key) > 0) {
+                curr = curr.getLeft();
+            } else if(curr.key.compareTo(key) < 0){
+                curr = curr.getRight();
+            } else {
+                return curr;
+            }
+        }
+
+        return null;
     }
 
     /**
