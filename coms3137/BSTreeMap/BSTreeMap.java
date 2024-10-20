@@ -484,7 +484,14 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
     }
 
     private int sumLevels(Node<K, V> node, int level) {
-        // TODO
+        if (node == null){
+            return 0;
+        }
+
+        int leftSum = sumLevels(node.getLeft(), level+1);
+        int rightSum = sumLevels(node.getRight(), level+1);
+
+        return level + leftSum + rightSum;
     }
 
     /**
@@ -508,6 +515,15 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
 
     private int sumNullLevels(Node<K, V> node, int level) {
         // TODO
+        if (node == null){
+            return level;
+        }
+
+        int leftSum = sumNullLevels(node.getLeft(), level+1);
+        int rightSum = sumNullLevels(node.getRight(), level+1);
+
+        return leftSum + rightSum;
+
     }
 
     public double successfulSearchCost() {
