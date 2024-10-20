@@ -57,11 +57,9 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
             return null;
         }
 
-        Node<K, V> n = new Node<>(null, null);
-        size++;
         int mid = low + (high - low) / 2;
-        n.key = pairs[mid].key;
-        n.value = pairs[mid].value;
+        Node<K, V> n = new Node<>(pairs[mid].key, pairs[mid].value);
+        size++;
 
         n.setLeft(createBST(pairs, low, mid-1));
 
