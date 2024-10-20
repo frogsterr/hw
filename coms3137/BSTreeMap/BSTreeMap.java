@@ -132,6 +132,22 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
     private int preorder(Node<K, V> n, StringBuilder builder,
                          int nodesVisited) {
         // TODO
+        if (n == null){
+            return nodesVisited;
+        }
+
+        builder.append(n.toString());
+        nodesVisited++;
+
+        if (nodesVisited < size){
+            builder.append(", ");
+        }
+        
+
+        nodesVisited = preorder(n.getLeft(), builder, nodesVisited);
+        nodesVisited = preorder(n.getRight(), builder, nodesVisited);
+
+        return nodesVisited;
     }
 
     /**
@@ -160,9 +176,22 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
      */
     private int inorder(Node<K, V> n, StringBuilder builder,
                         int nodesVisited) {
-        // TODO
-    }
+        if (n==null){
+            return nodesVisited;
+        }
+       nodesVisited = inorder(n.getLeft(), builder, nodesVisited);
 
+       builder.append(n.toString());
+       nodesVisited++;
+       
+       if (nodesVisited < size){
+        builder.append(", ");
+       }
+       
+       nodesVisited = inorder(n.getRight(), builder, nodesVisited);
+
+       return nodesVisited;
+    }
     /**
      * Returns a String of the key-value pairs visited with a postorder
      * traversal. Uses a StringBuilder for efficiency.
@@ -190,6 +219,24 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
     private int postorder(Node<K, V> n, StringBuilder builder,
                           int nodesVisited) {
         // TODO
+        if (n==null){
+            return nodesVisited;
+        }
+
+        nodesVisited = postorder(n.getLeft(), builder, nodesVisited);
+        nodesVisited = postorder(n.getRight(), builder, nodesVisited);
+
+        builder.append(n.toString());
+        nodesVisited++;
+
+        if (nodesVisited < size){
+            builder.append(", ");
+        }
+
+
+        return nodesVisited;
+
+
     }
 
     /**
