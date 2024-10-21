@@ -338,7 +338,77 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
      *         mapping for key
      */
     public V remove(K key) {
-        // TODO
+        Node<K, V> n = iterativeSearch(key);
+        boolean wasHead = n == root ? false: true;
+        if (n==null){
+            return (V) null;
+        }
+
+        // n is leaf node
+        if (n.getRight() == null && n.getLeft() == null){
+            
+            if (wasHead){
+                root = null;
+               return n.value;
+            }
+
+            // Removes link from parent to child
+            if (n.getParent().getLeft() == n){
+                n.getParent().setLeft(null);
+            } else {
+                n.getParent().setRight(null);
+            }        
+        }
+
+        // n has a left child
+        if (n.getLeft() != null){
+            Node<K, V> succ = n.getLeft();
+            while (succ.getRight()!=null){
+                succ = succ.getRight();
+            }
+            if (succ!=n.getLeft()){
+
+                //Set rem. left child to succ NO NEED FOR S=GL!!
+                n.getLeft().setParent(succ);
+                
+                //Connects succ left to succ parent right.
+                if (succ.getLeft()!=null){
+                    succ.getLeft().setParent(succ.getParent());
+                    succ.getParent().setRight(succ.getLeft());
+                    
+                } else {
+                    succ.getParent().setRight(null);
+                }
+                 
+                //Connects succ to rem. left and right.
+                succ.setLeft(n.getLeft());
+                succ.setRight(n.getRight());
+
+                // Connects n children to succ.
+                n.getLeft().setParent(succ);
+
+            }
+
+            //Connects succ to n.right
+            if (n.getRight()!=null){
+                n.getRight().setParent(succ);
+                succ.setRight(n.getRight());
+            }
+
+            // Connects Succ parent to Rem. parent
+            succ.setParent(n.getParent());
+            // Connects Rem. Parent to Succ
+            if(wasHead){
+                root = succ;
+            } else {
+                if (n.getParent().getLeft()==n){
+                    n.getParent().setLeft(succ);
+                } else{
+                    n.getParent().setRight(succ);
+                }
+            }
+        }
+        return n.value;
     }
 
     /**
