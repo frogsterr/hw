@@ -342,9 +342,17 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
         if (n==null){
             return (V) null;
         }
+        return delete(n).value;
+    }
 
-        // Node has no left child
-        if (n.getLeft()== null){
+    /**
+     * Deletes Node from map
+     * @param n Node to remove
+     * @return value of removed node
+     */
+    protected Node<K, V> delete(Node<K, V> n){
+         // Node has no left child
+         if (n.getLeft()== null){
             //Connects the n.right p to n.p no need to connect w/ left bc null.
             transplant(n, n.getRight());
         }
@@ -356,16 +364,13 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
         else {
             Node<K, V> succ = treeMinimum(n.getRight());
             // Successor is node with depth
-            if (succ.getParent()!=n.getRight()){
+            if (succ.getParent()!=n){
                 // Connects succ.right to parent! Its ok if null. 
                 transplant(succ, succ.getRight());
                 // Connects succ.right w/ n.right
                 succ.setRight(n.getRight());
-                
-                if (n.getRight() != null) {
-                    // n.right parent becomes succ. 
-                    succ.getRight().setParent(succ);
-                }
+                // connects succ.right to succ
+                succ.getRight().setParent(succ);
             }
             // succ takes position of n             
             transplant(n, succ);
@@ -374,10 +379,8 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
             // n.left parent becomes succ
             succ.getLeft().setParent(succ);
         }
-
-        return n.value;
+        return n;
     }
-
     /**
      * Connects parents of U to V. 
      * @param u Node to be replaced
