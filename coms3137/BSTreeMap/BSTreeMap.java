@@ -339,76 +339,61 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
      */
     public V remove(K key) {
         Node<K, V> n = iterativeSearch(key);
-        boolean wasHead = n == root ? false: true;
         if (n==null){
             return (V) null;
         }
 
-        // n is leaf node
-        if (n.getRight() == null && n.getLeft() == null){
-            
-            if (wasHead){
-                root = null;
-               return n.value;
-            }
-
-            // Removes link from parent to child
-            if (n.getParent().getLeft() == n){
-                n.getParent().setLeft(null);
-            } else {
-                n.getParent().setRight(null);
-            }        
+        // Node has no left child
+        if (n.getLeft()== null){
+            //Connects the n.right p to n.p no need to connect w/ left bc null.
+            transplant(n, n.getRight());
         }
-
-        // n has a left child
-        if (n.getLeft() != null){
-            Node<K, V> succ = n.getLeft();
-            while (succ.getRight()!=null){
-                succ = succ.getRight();
-            }
-            if (succ!=n.getLeft()){
-
-                //Set rem. left child to succ NO NEED FOR S=GL!!
-                n.getLeft().setParent(succ);
+        // Node has no right child
+        else if(n.getRight() == null){
+            //Connects the n.left p to n.p no need to connect w/ right bc null.
+            transplant(n, n.getLeft());
+        }
+        else {
+            Node<K, V> succ = treeMinimum(n.getRight());
+            // Successor is node with depth
+            if (succ.getParent()!=n.getRight()){
+                // Connects succ.right to parent! Its ok if null. 
+                transplant(succ, succ.getRight());
+                // Connects succ.right w/ n.right
+                succ.setRight(n.getRight());
                 
-                //Connects succ left to succ parent right.
-                if (succ.getLeft()!=null){
-                    succ.getLeft().setParent(succ.getParent());
-                    succ.getParent().setRight(succ.getLeft());
-                    
-                } else {
-                    succ.getParent().setRight(null);
-                }
-                 
-                //Connects succ to rem. left and right.
-                succ.setLeft(n.getLeft());
-                succ.setRight(n.getRight());
-
-                // Connects n children to succ.
-                n.getLeft().setParent(succ);
-
-            }
-
-            //Connects succ to n.right
-            if (n.getRight()!=null){
-                n.getRight().setParent(succ);
-                succ.setRight(n.getRight());
-            }
-
-            // Connects Succ parent to Rem. parent
-            succ.setParent(n.getParent());
-            // Connects Rem. Parent to Succ
-            if(wasHead){
-                root = succ;
-            } else {
-                if (n.getParent().getLeft()==n){
-                    n.getParent().setLeft(succ);
-                } else{
-                    n.getParent().setRight(succ);
+                if (n.getRight() != null) {
+                    // n.right parent becomes succ. 
+                    succ.getRight().setParent(succ);
                 }
             }
+            // succ takes position of n             
+            transplant(n, succ);
+            // Succ takes n.left
+            succ.setLeft(n.getLeft());
+            // n.left parent becomes succ
+            succ.getLeft().setParent(succ);
         }
+
         return n.value;
+    }
+
+    /**
+     * Connects parents of U to V. 
+     * @param u Node to be replaced
+     * @param v Replacing Node
+     */
+    protected void transplant(Node<K, V> u, Node<K,V> v){
+        if (u.getParent() == null){
+            root = v;
+        } else if (u==u.getParent().getLeft()) {
+            u.getParent().setLeft(v);
+        } else{
+            u.getParent().setRight(v);
+        }
+        if (v!=null){
+            v.setParent(u.getParent());
+        } 
     }
 
     /**
