@@ -102,7 +102,7 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
      */
     public boolean isEmpty() {
         // TODO
-        return root == null ? false : true;
+        return root == null;
     }
 
     /**
@@ -184,7 +184,7 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
        builder.append(n.toString());
        nodesVisited++;
        
-       if (nodesVisited < size){
+       if (nodesVisited < size){ //this might be wrong size!!!!
         builder.append(", ");
        }
        
@@ -379,6 +379,7 @@ public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
             // n.left parent becomes succ
             succ.getLeft().setParent(succ);
         }
+        size--;
         return n;
     }
     /**
