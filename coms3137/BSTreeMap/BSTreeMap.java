@@ -4,7 +4,7 @@ import java.util.Stack;
 /**
  * Class that implements a binary search tree which implements the MyMap
  * interface.
- * @author Benjamin Shvartsman
+ * @author
  * @version 1.1.1 October 17, 2024
  */
 public class BSTreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
