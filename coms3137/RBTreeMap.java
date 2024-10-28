@@ -1,5 +1,7 @@
 import java.io.Reader;
 
+import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
+
 /**
  * Class that implements a red-black tree which implements the MyMap interface.
  * @author Brian S. Borowski
@@ -230,26 +232,25 @@ public class RBTreeMap<K extends Comparable<K>, V> extends BSTreeMap<K, V>
      */
     private void deleteFixup(RBNode<K, V> x) {
         while (x != null && x != (RBNode<K, V>)root && x.color == RBNode.BLACK){
+            if (x==null){
+                return;
+            }
             // Left side
             if (x==x.getParent().getLeft()){
                 //Sibling
                 RBNode<K, V> w = x.getParent().getRight();
                 
-                if (w==null){
-                    x = x.getParent(); // not sure yet!
-                }
-
                 // Case 1 Sibling is red
-                if (w.color == RBNode.RED){
+                if (w != null && w.color == RBNode.RED){
                     w.color = RBNode.BLACK;
                     x.getParent().color = RBNode.RED;
                     leftRotate(x.getParent());
                     w = x.getParent().getRight();
                 }
                 // Case 2 sibling left black and right black
-                if ((w.getLeft() == null || w.getLeft().color== RBNode.BLACK) && 
-                (w.getRight() == null || w.getRight().color == RBNode.BLACK)) {
-                    w.color = RBNode.RED;
+                if (w==null || ((w.getLeft() == null || w.getLeft().color== RBNode.BLACK) && 
+                (w.getRight() == null || w.getRight().color == RBNode.BLACK))) {
+                    if (w!=null) w.color = RBNode.RED;
                     x = x.getParent();
                 } else {
                     if (w.getRight()==null || w.getRight().color == RBNode.BLACK){
@@ -267,16 +268,16 @@ public class RBTreeMap<K extends Comparable<K>, V> extends BSTreeMap<K, V>
             // Right Side
             }else {
                 RBNode<K, V> w = x.getParent().getLeft();
-                if (w.color == RBNode.RED){
+                if (w!=null && w.color == RBNode.RED){
                     w.color = RBNode.BLACK;
                     x.getParent().color = RBNode.RED;
                     rightRotate(x.getParent());
                     w = x.getParent().getLeft();
                 }
                 // Case 2 sibling children black
-                if ((w.getLeft() == null || w.getLeft().color == RBNode.BLACK) && 
-                (w.getRight() == null || w.getRight().color == RBNode.BLACK)) {
-                    w.color = RBNode.RED;
+                if (w==null || ((w.getLeft() == null || w.getLeft().color == RBNode.BLACK) && 
+                (w.getRight() == null || w.getRight().color == RBNode.BLACK))) {
+                    if(w!=null) w.color = RBNode.RED;
                     x = x.getParent();
                 } else {
                     if (w.getLeft()==null || w.getLeft().color==RBNode.BLACK){
@@ -296,6 +297,7 @@ public class RBTreeMap<K extends Comparable<K>, V> extends BSTreeMap<K, V>
         if (x!= null){
             x.color = RBNode.BLACK;
         }
+        ((RBNode<K, V>)root).color = RBNode.BLACK;
     }
 
     /**
